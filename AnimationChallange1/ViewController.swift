@@ -12,22 +12,27 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var efSelection: UISegmentedControl!
     @IBOutlet weak var mCircle: UIView!
-    
+    var listCircle : [UIView] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         //view circle
         
-        for _ in 0...1500{
-            createBuble()
-        }
-       
         mCircle.layer.cornerRadius = mCircle.frame.size.width/2
         mCircle.clipsToBounds = true
         //enable tap
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickView(_:)))
         tapGesture.delegate = self as? UIGestureRecognizerDelegate
         mCircle.addGestureRecognizer(tapGesture)
-        
+//        for mUI in listCircle{
+//            UIView.animate(withDuration: 1.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 1, options: [.repeat,.autoreverse], animations: {
+//                let mX = Int.random(in: 1...400)
+//                let mY = Int.random(in: 1...1000)
+//                mUI.center = CGPoint(x: mX, y: mY)
+//            }) { (Bool) in
+//
+//            }
+//            view.addSubview(mUI)
+//        }
     }
    
     @objc func clickView(_ sender: UIView) {
@@ -52,16 +57,9 @@ class ViewController: UIViewController {
         // Add rounded corners to UIView
         myNewView.layer.cornerRadius=myNewView.frame.size.width/2
         myNewView.clipsToBounds = true
-        UIView.animate(withDuration: 1, delay: 0, options: [.repeat,.autoreverse], animations: {
-            let mX = Int.random(in: 1...400)
-            let mY = Int.random(in: 1...1000)
-            myNewView.center = CGPoint(x: mX, y: mY)
-            self.mCircle.bringSubviewToFront(myNewView)
-        }) { (Bool) in
-            
-        }
+        
         // Add UIView as a Subview
-        self.view.addSubview(myNewView)
+        self.listCircle.append(myNewView)
     }
     
     func springMovement(){
