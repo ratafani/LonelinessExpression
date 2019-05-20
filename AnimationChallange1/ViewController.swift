@@ -7,53 +7,137 @@
 //
 
 import UIKit
+import CoreMotion
 
+struct backgroundTimer {
+    static var currentBackgroundDate : NSDate?
+}
 class ViewController: UIViewController {
 
-    @IBOutlet weak var efSelection: UISegmentedControl!
+    @IBOutlet weak var mTitle: UILabel!
+    @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var mCircle: UIView!
     var listCircle : [UIView] = []
+    var tempX : Double = 0.0
+    var tempY : Double = 0.0
+    var lay : Bool = false
+    var motion = CMMotionManager()
+    var timer: Timer!
+    var seconds : Int = 0
+    
+    var customAnim = CustomAnimation()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         //view circle
-        
+        runTimer()
         mCircle.layer.cornerRadius = mCircle.frame.size.width/2
         mCircle.clipsToBounds = true
+        
         //enable tap
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickView(_:)))
         tapGesture.delegate = self as? UIGestureRecognizerDelegate
         mCircle.addGestureRecognizer(tapGesture)
-//        for mUI in listCircle{
-//            UIView.animate(withDuration: 1.5, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 1, options: [.repeat,.autoreverse], animations: {
-//                let mX = Int.random(in: 1...400)
-//                let mY = Int.random(in: 1...1000)
-//                mUI.center = CGPoint(x: mX, y: mY)
-//            }) { (Bool) in
-//
-//            }
-//            view.addSubview(mUI)
-//        }
+        
+        //makingbuble
+        for _ in 0...600{
+            createBuble()
+        }
+        
+        for mUI in listCircle{
+            view.addSubview(mUI)
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: Selector(("pauseApp")), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: Selector(("startApp")), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
     }
-   
-    @objc func clickView(_ sender: UIView) {
-        let sel = efSelection.selectedSegmentIndex
-        // chosing animation
-        if sel == 0{
-            fadeOut()
-        }else if sel == 1 {
-            springMovement()
+    
+    func pauseApp(){
+        timer.invalidate()//invalidate timer
+        backgroundTimer.currentBackgroundDate = NSDate()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+      gyro()
+    }
+    
+    func gyro(){
+        if motion.isDeviceMotionAvailable{
+            motion.deviceMotionUpdateInterval = 0.1
+            motion.startDeviceMotionUpdates(to: OperationQueue.current!) { (data, errot) in
+                self.handleDeviceMotionUpdate(deviceMotion: data!)
+            }
         }
     }
     
+    func runTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 0.01, target: self,   selector: (#selector(ViewController.updateTimer)), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateTimer() {
+        if seconds <= 600{
+            customAnim.fadeOut(view: listCircle[seconds])
+            seconds += 1
+        }
+        
+    }
+    
+    func degrees(radians:Double) -> Double {
+        return 180 / .pi * radians
+    }
+    
+    func handleDeviceMotionUpdate(deviceMotion:CMDeviceMotion) {
+        let attitude = deviceMotion.attitude
+       
+        let pitch = degrees(radians: attitude.pitch)
+        
+        if pitch > 15 {
+            lay = false
+            print(seconds)
+            timer.invalidate()
+            if seconds <= 600{
+                seconds = 0
+                customAnim.fadeIn(view: background)
+                customAnim.fadeIn(view: mTitle)
+                customAnim.fadeIn(view: mCircle)
+            }
+            for mUI in listCircle{
+                customAnim.fadeOut(view: mUI)
+            }
+        }else if pitch < 16{
+            print(seconds)
+            customAnim.fadeOut(view: background)
+            customAnim.fadeOut(view: mCircle)
+            customAnim.fadeOut(view: mTitle)
+            if !lay{
+                runTimer()
+                for mUI in listCircle{
+                    if seconds <= 600 {
+                        seconds = 0
+                        customAnim.fadeIn(view: mUI)
+                        customAnim.springMovement(view: mUI)
+                    }
+                }
+                lay = true
+            }
+            
+        }
+    }
+    
+    @objc func clickView(_ sender: UIView) {
+        seconds = 0
+        customAnim.fadeOut(view:mCircle)
+        customAnim.fadeIn(view: mCircle)
+    }
+    
+    //
     func createBuble(){
         let randomX = Int.random(in: 1...400)
         let randomY = Int.random(in: 1...1000)
         let myNewView=UIView(frame: CGRect(x: randomX, y: randomY, width: 30, height: 30))
         // Change UIView background colour
-        let red = Double.random(in: 0...1)
-        let blue = Double.random(in: 0...1)
-        let yellow = Double.random(in: 0...1)
-        myNewView.backgroundColor = UIColor.init(red: CGFloat(red), green: CGFloat(yellow), blue: CGFloat(blue), alpha: 1)
+        customAnim.changeColor(view: myNewView)
         // Add rounded corners to UIView
         myNewView.layer.cornerRadius=myNewView.frame.size.width/2
         myNewView.clipsToBounds = true
@@ -62,48 +146,5 @@ class ViewController: UIViewController {
         self.listCircle.append(myNewView)
     }
     
-    func springMovement(){
-       
-        UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveLinear, animations: {
-            self.changePos()
-            
-            self.changeColor()
-        }) { (isFinish) in
-            
-        }
-    }
-    
-    func changePos(){
-        let randomX = Int.random(in: 1...300)
-        let randomY = Int.random(in: 1...800)
-        mCircle.center = CGPoint(x: randomX, y: randomY)
-    }
-    func changeColor(){
-        let red = Double.random(in: 0...1)
-        let blue = Double.random(in: 0...1)
-        let yellow = Double.random(in: 0...1)
-        mCircle.backgroundColor = UIColor.init(red: CGFloat(red), green: CGFloat(yellow), blue: CGFloat(blue), alpha: 1)
-    }
-    func fadeOut(){
-        UIView.animate(withDuration: 0.5, animations: {
-            //scale 2x
-            self.mCircle.transform = CGAffineTransform(scaleX: 2, y: 2)
-            // transparant
-            self.mCircle.alpha = 0
-        }) { (isFinished) in
-            self.changePos()
-            
-            self.fadeIn()
-        }
-    }
-    func fadeIn(){
-        UIView.animate(withDuration: 0.5) {
-            // balikin ke size semula
-            self.mCircle.transform = CGAffineTransform(scaleX: 1, y: 1)
-            self.changeColor()
-            self.mCircle.alpha = 1
-        }
-    }
     
 }
-

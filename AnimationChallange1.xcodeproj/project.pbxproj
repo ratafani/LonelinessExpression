@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F637FF90228E2F1900D50F33 /* CustomAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F637FF8F228E2F1900D50F33 /* CustomAnimation.swift */; };
 		F6E69E4E228B014400314D70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E69E4D228B014400314D70 /* AppDelegate.swift */; };
 		F6E69E50228B014400314D70 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E69E4F228B014400314D70 /* ViewController.swift */; };
 		F6E69E53228B014400314D70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6E69E51228B014400314D70 /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F637FF8F228E2F1900D50F33 /* CustomAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnimation.swift; sourceTree = "<group>"; };
 		F6E69E4A228B014400314D70 /* AnimationChallange1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnimationChallange1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6E69E4D228B014400314D70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F6E69E4F228B014400314D70 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				F6E69E59228B014600314D70 /* LaunchScreen.storyboard */,
 				F6E69E5C228B014600314D70 /* Info.plist */,
 				F6E69E54228B014400314D70 /* AnimationChallange1.xcdatamodeld */,
+				F637FF8F228E2F1900D50F33 /* CustomAnimation.swift */,
 			);
 			path = AnimationChallange1;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				F6E69E50228B014400314D70 /* ViewController.swift in Sources */,
 				F6E69E56228B014400314D70 /* AnimationChallange1.xcdatamodeld in Sources */,
 				F6E69E4E228B014400314D70 /* AppDelegate.swift in Sources */,
+				F637FF90228E2F1900D50F33 /* CustomAnimation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
