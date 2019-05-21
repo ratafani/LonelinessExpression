@@ -12,11 +12,12 @@ import CoreMotion
 struct backgroundTimer {
     static var currentBackgroundDate : NSDate?
 }
+
 class ViewController: UIViewController {
 
-    @IBOutlet weak var mTitle: UILabel!
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var mCircle: UIView!
+    
     var listCircle : [UIView] = []
     var tempX : Double = 0.0
     var tempY : Double = 0.0
@@ -47,13 +48,13 @@ class ViewController: UIViewController {
         for mUI in listCircle{
             view.addSubview(mUI)
         }
-        
-        NotificationCenter.default.addObserver(self, selector: Selector(("pauseApp")), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: Selector(("startApp")), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pauseApp(_:)), name: UIApplication.didEnterBackgroundNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: Selector(("pauseApp")), name: UIApplication.didEnterBackgroundNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: Selector(("startApp")), name: UIApplication.didBecomeActiveNotification, object: nil)
         
     }
     
-    func pauseApp(){
+    @objc func pauseApp(_ sender: UIApplication){
         timer.invalidate()//invalidate timer
         backgroundTimer.currentBackgroundDate = NSDate()
     }
@@ -99,7 +100,11 @@ class ViewController: UIViewController {
             if seconds <= 600{
                 seconds = 0
                 customAnim.fadeIn(view: background)
-                customAnim.fadeIn(view: mTitle)
+                customAnim.fadeIn(view: mCircle)
+            }else{
+                background.image = UIImage(named: "background2")
+                mCircle.backgroundColor = .white
+                customAnim.fadeIn(view: background)
                 customAnim.fadeIn(view: mCircle)
             }
             for mUI in listCircle{
@@ -109,7 +114,6 @@ class ViewController: UIViewController {
             print(seconds)
             customAnim.fadeOut(view: background)
             customAnim.fadeOut(view: mCircle)
-            customAnim.fadeOut(view: mTitle)
             if !lay{
                 runTimer()
                 for mUI in listCircle{
@@ -127,7 +131,12 @@ class ViewController: UIViewController {
     
     @objc func clickView(_ sender: UIView) {
         seconds = 0
+        
+        background.image = UIImage(named: "background")
+        mCircle.backgroundColor = .black
         customAnim.fadeOut(view:mCircle)
+        customAnim.fadeOut(view:background)
+        customAnim.fadeIn(view: background)
         customAnim.fadeIn(view: mCircle)
     }
     

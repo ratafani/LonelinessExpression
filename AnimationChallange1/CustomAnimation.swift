@@ -34,7 +34,7 @@ class CustomAnimation{
     }
     
     func fadeOut(view : UIView){
-        UIView.animate(withDuration: Double.random(in: 0...1.5), animations: {
+        UIView.animate(withDuration: Double.random(in: 1...1.5), animations: {
             //scale 2x
             view.transform = CGAffineTransform(scaleX: 2, y: 2)
             // transparant
@@ -44,7 +44,7 @@ class CustomAnimation{
     }
     
     func fadeIn(view : UIView){
-        UIView.animate(withDuration: Double.random(in: 0...1.5)) {
+        UIView.animate(withDuration: Double.random(in: 1...1.5)) {
             // balikin ke size semula
             view.transform = CGAffineTransform(scaleX: 1, y: 1)
             view.alpha = 1
