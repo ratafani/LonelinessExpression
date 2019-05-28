@@ -19,6 +19,18 @@ class CustomAnimation{
             
         }
     }
+    func springMovement2(view : UIView){
+        
+        UIView.animate(withDuration: Double.random(in: 1...3), delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 1, options: [.curveEaseOut,.repeat,.autoreverse], animations: {
+            
+            let randomX = Int.random(in: 1...100)
+            let randomY = Int.random(in: 1...100)
+            view.center = CGPoint(x: randomX, y: randomY)
+            
+        }) { (isFinish) in
+            
+        }
+    }
     
     func changePos(view : UIView){
         let randomX = Int.random(in: 1...400)
